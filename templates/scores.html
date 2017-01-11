@@ -1,0 +1,12 @@
+<table border="1" width="100%">
+    <tr>
+        <th>Name</th>
+        <th>Score</th>
+    </tr>
+    {% for score in scores %}
+    <tr>
+        <td>{{score.name}}</td>
+        <td>{{score.score}}</td>
+    </tr>
+    {% endfor %}
+</table>

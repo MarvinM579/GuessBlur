@@ -1,0 +1,69 @@
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+{% if session['name'] %}
+{% for image in img %}
+<img class="gameimg blurred" src="{{image.url}}" alt="">
+{% if s == 1 %}
+<p>Is this {{image.fake}}?</p>
+<button type="button" name="button" id="btnNo">Yes</button>
+<button type="button" name="button" id="btnYes">No</button>
+<p class="right">CORRECT</p>
+<p class="wrong">WRONG</p>
+{% if session['missed'] == 2 %}
+<button type="button" name "button" id="btnNext" onclick="window.location.href='/game_over'">Continue</button>
+{% elif session['missed'] < 2 %}
+<button type="button" name "button" id="btnNext" onclick="window.location.href='/game'">Continue</button>
+{% endif %}
+{% elif s == 2 %}
+<p>Is this {{image.correct}}?</p>
+<button type="button" name="button" id="btnYes">Yes</button>
+<button type="button" name="button" id="btnNo">No</button>
+<p class="right">CORRECT</p>
+<p class="wrong">WRONG</p>
+{% if session['missed'] == 2 %}
+<button type="button" name "button" id="btnNext" onclick="window.location.href='/game_over'">Continue</button>
+{% elif session['missed'] < 2 %} <button type="button" name "button" id="btnNext" onclick="window.location.href='/game'">Continue</button>
+{% endif %}
+{% endif %}
+{% endfor %}
+<h1>{{session['points']}}</h1> 
+{% endif %}
+<script type="text/javascript">
+$(document).ready(function() {
+$("#btnNext").hide();
+$(".right").hide();
+$(".wrong").hide();
+});
+
+$("#btnYes").click(function() {
+    $.getJSON("/selection", {
+        "action": "Yes"
+    }, function(data) {
+        console.log(data.success)
+        console.log(data.points)
+    });
+    $("#btnYes").hide();
+    $("#btnNo").hide();
+    $("#btnNext").show();
+    $(".right").show();
+});
+
+
+$("#btnNo").click(function() {
+    $.getJSON("/selection", {
+        "action": "No"
+    }, function(data) {
+        console.log(data.success)
+        console.log(data.points)
+    });
+    $("#btnYes").hide();
+    $("#btnNo").hide();
+    $("#btnNext").show();
+    $(".wrong").show();
+});
+</script>
+
+<form class="" action="/end_game" method="post">
+<button type="submit">End Game</button>
+</form>
